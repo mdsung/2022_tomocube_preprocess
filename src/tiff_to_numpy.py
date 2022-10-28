@@ -18,7 +18,6 @@ def get_output_numpy_path(raw_data_path: Path) -> Path:
 
 
 def main():
-    print(sys.argv)
     raw_data_path = Path(sys.argv[1])
     output_data_path = get_output_numpy_path(raw_data_path)
     output_data_path.parent.mkdir(parents=True, exist_ok=True)

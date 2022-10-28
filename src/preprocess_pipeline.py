@@ -1,9 +1,10 @@
-import pandas as pd
-from pathlib import Path
-import tifffile
-import numpy as np
-from tqdm import tqdm
 from dataclasses import dataclass
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import tifffile
+from tqdm import tqdm
 
 
 @dataclass
@@ -21,7 +22,9 @@ class Boundingbox:
         point += image_crop_size // 2
         return int(min(point, max_size))
 
-    def full_image(self, image: np.array, image_crop_size: int, image_crop_size2: int):
+    def full_image(
+        self, image: np.array, image_crop_size: int, image_crop_size2: int
+    ):
         full_array = image[
             self.start_point(self.x, image_crop_size) : self.end_point(
                 self.x, image_crop_size, 276
@@ -34,11 +37,16 @@ class Boundingbox:
             ),  # for indexing last point
         ]
 
-        if full_array.shape == (image_crop_size, image_crop_size, image_crop_size2):
+        if full_array.shape == (
+            image_crop_size,
+            image_crop_size,
+            image_crop_size2,
+        ):
             return full_array
 
         median_filled_image = np.full(
-            (image_crop_size, image_crop_size, image_crop_size2), np.median(full_array)
+            (image_crop_size, image_crop_size, image_crop_size2),
+            np.median(full_array),
         )
         print(full_array.shape)
 
@@ -58,7 +66,9 @@ class Boundingbox:
         end_y = end_y if y_shape % 2 == 0 else end_y - 1
         end_z = end_z if z_shape % 2 == 0 else end_z - 1
 
-        median_filled_image[start_x:end_x, start_y:end_y, start_z:end_z] = full_array
+        median_filled_image[
+            start_x:end_x, start_y:end_y, start_z:end_z
+        ] = full_array
         return median_filled_image
 
 

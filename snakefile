@@ -4,7 +4,7 @@ os.environ["PYTHONPATH"] = "."
 
 rule all:
     input:
-        "/home/data/tomocube/processed/raw_numpy/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
+        "/home/data/tomocube/processed/input/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
 
 rule tiff_to_numpy:
     input:
@@ -14,3 +14,12 @@ rule tiff_to_numpy:
         "{datapath}/processed/raw_numpy/{sample}.npy"
     shell:
         "python {input.script} '{input.tiff}'"
+
+rule raw_to_input:
+    input:
+        script = "src/raw_numpy_to_input.py",
+        raw = "{datapath}/raw_numpy/{sample}.npy",
+    output:
+        "{datapath}/input/{sample}.npy"
+    shell:
+        "python {input.script} '{input.raw}' 64 64 64"
