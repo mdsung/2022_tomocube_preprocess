@@ -13,6 +13,10 @@ pandas = "^1.5.1"
 tifffile = "^2022.10.10"
 snakemake = "^7.17.1"
 tqdm = "^4.64.1"
+matplotlib = "^3.6.1"
+SQLAlchemy = "^1.4.42"
+PyMySQL = "^1.0.2"
+python-dotenv = "^0.21.0"
 
 
 [tool.poetry.group.dev.dependencies]
