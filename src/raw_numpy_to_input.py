@@ -70,8 +70,8 @@ def get_output_numpy_path(raw_data_path: Path) -> Path:
     )
 
 
-def get_center_point(target_file: Path) -> Point:
-    df = pd.read_csv("data/processed/sepsis_meta.csv")
+def get_center_point(target_file: Path, metadata_path: Path) -> Point:
+    df = pd.read_csv(metadata_path)
     result = df.loc[
         df["file_name"] == target_file.stem + ".tiff", ["x", "y", "z"]
     ].to_numpy()[0]
@@ -83,9 +83,10 @@ def main():
     # center_point = Point(276 // 2, 276 // 2, 210 // 2)
     # crop_size = CropSize(64, 64, 64)
     input_path = Path(sys.argv[1])
-    crop_size = CropSize(int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]))
+    metadata_path = Path(sys.argv[2])
+    crop_size = CropSize(int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5]))
 
-    center_point = get_center_point(input_path)
+    center_point = get_center_point(input_path, metadata_path)
     output_path = get_output_numpy_path(input_path)
     get_output_numpy_path(input_path).parent.mkdir(parents=True, exist_ok=True)
 

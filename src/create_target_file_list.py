@@ -1,12 +1,11 @@
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-DATA_PATH = Path("/home/data/tomocube/raw/")
 
-
-def get_target_files():
-    df = pd.read_csv("data/processed/sepsis_meta.csv")
+def get_target_files(metadata_path):
+    df = pd.read_csv(metadata_path)
     df = df.loc[
         (df["quality"] == 0)
         & (df["image_type"] == "HOLOTOMOGRAPHY")
@@ -26,8 +25,11 @@ def get_all_tiff_files_in_folder(path: Path) -> pd.DataFrame:
 
 
 def main():
-    all_tiff_files = get_all_tiff_files_in_folder(DATA_PATH)
-    target_files = get_target_files()
+    data_path = Path(sys.argv[1])
+    metadata_path = Path(sys.argv[2])
+
+    all_tiff_files = get_all_tiff_files_in_folder(data_path)
+    target_files = get_target_files(metadata_path)
 
     final_files = all_tiff_files.loc[
         all_tiff_files["file_name"].isin(target_files)

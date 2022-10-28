@@ -2,23 +2,24 @@ import os
 import pandas as pd
 
 os.environ["PYTHONPATH"] = "."
+DATA_PATH = Path("/home/data/tomocube/raw/")
 
 rule create_metadata_table:
     input:  
         script = "src/create_tomocube_metadata.py"
     output:
-        "data/processed/tomocube_meta.csv",
+        "data/processed/tomocube_metadata.csv",
     shell:
         "python {input.script}"
 
-rule create_target_file_table:
+checkpoint create_target_file_list:
     input:
-        "data/processed/tomocube_meta.csv",
+        meta = "data/processed/tomocube_metadata.csv",
         script = "src/create_target_file_list.py"
     output:
         "data/processed/target_files.txt"
     shell:
-        "python {input.script}"
+        "python {input.script} {DATA_PATH} {input.meta}"
 
 rule tiff_to_numpy:
     input:
@@ -33,6 +34,7 @@ rule raw_to_input:
     input:
         script = "src/raw_numpy_to_input.py",
         raw = "{datapath}/raw_numpy/{sample}.npy",
+        meta = "data/processed/tomocube_metadata.csv"
     output:
         "{datapath}/input/{sample}.npy"
     params:
@@ -40,9 +42,15 @@ rule raw_to_input:
         size_y = 64,
         size_z = 64
     shell:
-        "python {input.script} '{input.raw}' {params.size_x} {params.size_y} {params.size_z}"
+        "python {input.script} '{input.raw}' {input.meta} {params.size_x} {params.size_y} {params.size_z}"
 
-rule inputs:
+
+
+def read_target_file_list(wildcards):
+    with open(checkpoints.create_target_file_list.get().output[0]) as f:
+        targets = [target for target in f.read().split('\n')]  # we dont want empty lines
+        return expand("{target}", target=targets)
+
+rule all:
     input:
-        "data/processed/target_files.txt",
-        expand("{target}", target = open('data/processed/target_files.txt', 'r').read().splitlines())
+        read_target_file_list
