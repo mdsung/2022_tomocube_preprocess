@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "2022-tomocube-preprocess"
+version = "0.1.0"
+description = ""
+authors = ["MinDong Sung <mdskylover@gmail.com>"]
+readme = "README.md"
+packages = [{include = "2022_tomocube_preprocess"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.23.4"
+pandas = "^1.5.1"
+tifffile = "^2022.10.10"
+snakemake = "^7.17.1"
+tqdm = "^4.64.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.10.0"
+isort = "^5.10.1"
+pytest = "^7.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
