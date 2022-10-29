@@ -46,4 +46,6 @@ def test_get_output_numpy_path():
 
 def test_get_center_point():
     path = "/home/data/tomocube/processed/raw_numpy/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
-    assert get_center_point(Path(path)) == Point(106, 123, 117)
+    assert get_center_point(
+        Path(path), "data/processed/tomocube_metadata.csv"
+    ) == Point(106, 123, 117)
