@@ -1,7 +1,4 @@
-import pandas as pd
-from pathlib import Path
-
-DATA_PATH = Path("/home/data/tomocube/raw/")
+DATA_PATH = "/data/tomocube/raw/"
 
 rule create_metadata_table:
     input:  
@@ -32,10 +29,10 @@ rule tiff_to_numpy:
 rule raw_to_input:
     input:
         script = "src/raw_numpy_to_input.py",
-        raw = "{datapath}/raw_numpy/{sample}.npy",
+        raw = "{datapath}/processed/raw_numpy/{sample}.npy",
         meta = "data/processed/tomocube_metadata.csv"
     output:
-        "{datapath}/input/{sample}.npy"
+        "{datapath}/processed/input/{sample}.npy"
     params:
         size_x = 64,
         size_y = 64,
