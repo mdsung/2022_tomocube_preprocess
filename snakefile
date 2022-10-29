@@ -1,7 +1,6 @@
-import os
 import pandas as pd
+from pathlib import Path
 
-os.environ["PYTHONPATH"] = "."
 DATA_PATH = Path("/home/data/tomocube/raw/")
 
 rule create_metadata_table:
