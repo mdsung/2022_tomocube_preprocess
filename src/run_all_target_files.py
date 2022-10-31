@@ -44,8 +44,8 @@ def get_center_point(metadata, target_file):
 
 
 def process_target(target_file, metadata):
-    if target_file.exists():
-        return f"{target_file} already exists"
+    # if target_file.exists():
+    #     return f"{target_file} already exists"
 
     raw_data_path = get_raw_data_path(target_file)
     raw_arr, raw_numpy_path = _process_raw_numpy(raw_data_path)
@@ -57,10 +57,11 @@ def process_target(target_file, metadata):
 
 
 def _process_raw_numpy(raw_data_path):
-    raw_arr = tiff_to_numpy(raw_data_path)
+    # raw_arr = tiff_to_numpy(raw_data_path)
     raw_numpy_path = get_raw_numpy_path(raw_data_path)
+    raw_arr = np.load(raw_numpy_path)
     raw_numpy_path.parent.mkdir(parents=True, exist_ok=True)
-    save_numpy(raw_numpy_path, raw_arr)
+    # save_numpy(raw_numpy_path, raw_arr)
     return raw_arr, raw_numpy_path
 
 
@@ -78,7 +79,7 @@ def main():
     targets = get_targets()
     metadata = get_metadata()
     targets = [Path(target) for target in targets]
-    with concurrent.futures.ThreadPoolExecutor(max_workers=32) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=64) as executor:
         futures = [
             executor.submit(process_target, target, metadata)
             for target in targets
