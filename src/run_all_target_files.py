@@ -77,12 +77,7 @@ def _process_input_numpy(raw_arr, raw_numpy_path, center_point):
 def main():
     targets = get_targets()
     metadata = get_metadata()
-    targets = [
-        Path(target)
-        for target in targets
-        if target
-        != "/data/tomocube/processed/input/sepsis/20220530/20220530.151100.719.CD4-125_RI Tomogram.npy"
-    ]
+    targets = [Path(target) for target in targets]
     with concurrent.futures.ThreadPoolExecutor(max_workers=32) as executor:
         futures = [
             executor.submit(process_target, target, metadata)
