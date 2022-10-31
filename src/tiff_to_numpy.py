@@ -8,7 +8,7 @@ import tifffile
 
 def tiff_to_numpy(raw_data_path: Path):
     image = tifffile.imread(raw_data_path)
-    return np.array(image, dtype=np.float32).transpose(1, 2, 0)
+    return np.array(image).transpose(1, 2, 0)
 
 
 def get_output_numpy_path(raw_data_path: Path) -> Path:
