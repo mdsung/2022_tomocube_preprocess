@@ -5,9 +5,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import yaml
-from yaml import Loader
 
-from src.database import DBNAME, HOST, PASSWORD, PORT, USER, get_engine, get_sql
+from src.database import DBNAME, HOST, PASSWORD, PORT, USER, get_engine
 
 PROCESSED_DATA_PATH = Path("/data/tomocube/processed/input/")
 SEPSIS_PATIENTS = {5, 6, 7, 8, 9, 10, 11}
