@@ -12,7 +12,7 @@ def main():
 
     results = []
     for project in target_projects:
-        sql = sql_template.replace("2022_tomocube_sepsis", project)
+        sql = sql_template.replace("PROJECT", project)
         results.append(pd.read_sql(sql, engine))
 
     df = pd.concat(results)
