@@ -16,7 +16,7 @@ from src.raw_numpy_to_input import (
 def target_arr():
     return np.load(
         Path(
-            "/home/data/tomocube/processed/raw_numpy/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
+            "/data/tomocube/processed/raw_numpy/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
         )
     )
 
@@ -37,15 +37,15 @@ def test_normalize_img():
 def test_get_output_numpy_path():
     assert get_output_numpy_path(
         Path(
-            "/home/data/tomocube/processed/raw_numpy/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
+            "/data/tomocube/processed/raw_numpy/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
         )
     ) == Path(
-        "/home/data/tomocube/processed/input/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
+        "/data/tomocube/processed/input/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
     )
 
 
 def test_get_center_point():
-    path = "/home/data/tomocube/processed/raw_numpy/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
+    path = "/data/tomocube/processed/raw_numpy/sepsis/20220614/20220614.163204.097.monocyte-201_RI Tomogram.npy"
     assert get_center_point(
         Path(path), "data/processed/tomocube_metadata.csv"
     ) == Point(106, 123, 117)
