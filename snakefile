@@ -40,13 +40,34 @@ rule raw_to_input:
     shell:
         "python {input.script} '{input.raw}' {input.meta} {params.size_x} {params.size_y} {params.size_z}"
 
-
+rule raw_to_input2:
+    input:
+        script = "src/raw_numpy_to_input2.py",
+        raw = "{datapath}/processed/raw_numpy/{sample}.npy",
+        meta = "data/processed/tomocube_metadata.csv"
+    output:
+        "{datapath}/processed/input2/{sample}.npy"
+    params:
+        size_x = 64,
+        size_y = 64,
+        size_z = 64
+    shell:
+        "python {input.script} '{input.raw}' {input.meta} {params.size_x} {params.size_y} {params.size_z}"
 
 def read_target_file_list(wildcards):
     with open(checkpoints.create_target_file_list.get().output[0]) as f:
         targets = [target for target in f.read().split('\n')]  # we dont want empty lines
         return expand("{target}", target=targets)
 
-rule all:
+def read_target_file_list2(wildcards):
+    with open(checkpoints.create_target_file_list.get().output[0]) as f:
+        targets = [target.replace('input', 'input2') for target in f.read().split('\n')]  # we dont want empty lines
+        return expand("{target}", target=targets)
+
+rule inputs:
     input:
         read_target_file_list
+
+rule input2s:
+    input:
+        read_target_file_list2
