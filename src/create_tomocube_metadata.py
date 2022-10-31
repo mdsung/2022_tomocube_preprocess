@@ -1,28 +1,8 @@
-import os
 from pathlib import Path
 
 import pandas as pd
-import sqlalchemy as db
-from dotenv import load_dotenv
 
-load_dotenv()
-
-HOST = os.environ["HOST"]
-PORT = os.environ["PORT"]
-USER = os.environ["USER"]
-PASSWORD = os.environ["PASSWORD"]
-DBNAME = os.environ["DBNAME"]
-
-
-def get_sql(filepath: Path):
-    with open(filepath, "r") as f:
-        return f.read()
-
-
-def get_engine(host, port, user, password, dbname):
-    return db.create_engine(
-        f"mysql+pymysql://{user}:{password}@{host}:{port}/{dbname}"
-    )
+from src.database import DBNAME, HOST, PASSWORD, PORT, USER, get_engine, get_sql
 
 
 def main():
