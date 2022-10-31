@@ -1,0 +1,12 @@
+diagnosis_CD8:
+  group1: healthy
+  group2: timepoint1
+  celltype: CD8
+  group1_test: [20]
+  group2_test: [11]
+severe_CD8:
+  group1: timepoint1
+  group2: timepoint2
+  celltype: CD8
+  group1_test: [11]
+  group2_test: [11]
