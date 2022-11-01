@@ -1,67 +1,10 @@
 import sys
-from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
-import numpy.typing as npt
 import pandas as pd
 
-
-@dataclass
-class Point:
-    x: int
-    y: int
-    z: int
-
-    def __post_init__(self):
-        if not isinstance(self.x, int):
-            self.x = int(self.x)
-        if not isinstance(self.y, int):
-            self.y = int(self.y)
-        if not isinstance(self.z, int):
-            self.z = int(self.z)
-
-
-@dataclass
-class CropSize:
-    x: int
-    y: int
-    z: int
-
-    def __post_init__(self):
-        if not isinstance(self.x, int):
-            self.x = int(self.x)
-        if not isinstance(self.y, int):
-            self.y = int(self.y)
-        if not isinstance(self.z, int):
-            self.z = int(self.z)
-
-
-def crop_arr(
-    arr: npt.NDArray[np.float32], center: Point, crop_size: CropSize
-) -> npt.NDArray[np.float32]:
-
-    size_x, size_y, size_z = arr.shape
-    start_x = _get_start_point(0, center.x, crop_size.x)
-    start_y = _get_start_point(0, center.y, crop_size.y)
-    start_z = _get_start_point(0, center.z, crop_size.z)
-    end_x = _get_end_point(size_x, center.x, crop_size.x)
-    end_y = _get_end_point(size_y, center.y, crop_size.y)
-    end_z = _get_end_point(size_z, center.z, crop_size.z)
-
-    return arr[start_x:end_x, start_y:end_y, start_z:end_z]
-
-
-def _get_start_point(anchor: int, center: int, crop_size: int):
-    return max(anchor, center - crop_size // 2)
-
-
-def _get_end_point(anchor: int, center: int, crop_size: int):
-    return min(anchor, center + crop_size // 2)
-
-
-def normalize_img(arr: npt.NDArray[np.float32]) -> npt.NDArray[np.float32]:
-    return (arr - np.min(arr)) / (np.max(arr) - np.min(arr))
+from src.image import CropSize, Point, crop_arr, normalize_img
 
 
 def get_output_numpy_path(raw_data_path: Path) -> Path:
