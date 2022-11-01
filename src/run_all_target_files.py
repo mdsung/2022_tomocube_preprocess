@@ -57,10 +57,12 @@ def process_target(target_file, metadata):
 
 
 def _process_raw_numpy(raw_data_path):
-    raw_arr = tiff_to_numpy(raw_data_path)
     raw_numpy_path = get_raw_numpy_path(raw_data_path)
-    raw_arr = np.load(raw_numpy_path)
+    if raw_numpy_path.exists():
+        return np.load(raw_numpy_path), raw_numpy_path
+
     raw_numpy_path.parent.mkdir(parents=True, exist_ok=True)
+    raw_arr = tiff_to_numpy(raw_data_path)
     save_numpy(raw_numpy_path, raw_arr)
     return raw_arr, raw_numpy_path
 
@@ -79,23 +81,13 @@ def main():
     targets = get_targets()
     metadata = get_metadata()
     targets = [Path(target) for target in targets]
-    with concurrent.futures.ThreadPoolExecutor(max_workers=64) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=18) as executor:
         futures = [
             executor.submit(process_target, target, metadata)
             for target in targets
         ]
         for future in concurrent.futures.as_completed(futures):
             print(future.result())
-
-    # for target in tqdm(targets):
-    #     if Path(target).exists():
-    #         continue
-    #     try:
-    #         process_target(target, metadata)
-    #     except Exception as e:
-    #         print(e)
-    #         with open("error_files.txt", "a") as f:
-    #             f.write(str(target) + "\n")
 
 
 if __name__ == "__main__":
