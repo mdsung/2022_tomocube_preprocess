@@ -2,9 +2,11 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from icecream import ic
 from src.raw_numpy_to_input import (
     CropSize,
     Point,
+    _padding_with_median,
     crop_arr,
     get_center_point,
     get_output_numpy_path,
@@ -49,3 +51,17 @@ def test_get_center_point():
     assert get_center_point(
         Path(path), "data/processed/tomocube_metadata.csv"
     ) == Point(106, 123, 117)
+
+
+def test__padding_with_median():
+    arr = np.array(
+        [
+            [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+            [[7, 8, 9], [10, 11, 12], [13, 14, 15]],
+            [[10, 11, 12], [13, 14, 15], [16, 17, 18]],
+        ]
+    )
+    ic(arr)
+    result = _padding_with_median(arr, CropSize(3, 3, 3), 10)
+    ic(result.shape)
+    assert result.shape == arr.shape
