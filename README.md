@@ -25,8 +25,11 @@ Create a data preprocessing pipeline for tomocube data.
   - create_target_file_list.py: target file list for snakemake pipeline
   - database.py: database connection related files
   - dataloader.py: dataloader with task pickle file
-  - 
-
+  - create_task_dataset.py: create task pickle with task/task.yaml file
+  - create_exclude_images.py: create exclude images list file - `data/processed/exclude_images.csv`
+  - RI_distribution/
+    - `create_ri_distribution.py`: create RI distribution table - takes long time
+    - `preprocess_distribution_metrics.R`: create RI distribution figure
 - task/
   - task.yaml: task specificate
         ```
