@@ -9,7 +9,7 @@ import yaml
 from src.database import DBNAME, HOST, PASSWORD, PORT, USER, get_engine
 
 PROCESSED_DATA_PATH = Path("/data/tomocube/processed/input/")
-SEPSIS_PATIENTS = {5, 6, 7, 8, 9, 10, 11}
+SEPSIS_PATIENTS = {4, 5, 6, 7, 8, 9, 10, 11}
 HEALTHY_PATIENTS = {
     1,
     2,
@@ -32,6 +32,24 @@ HEALTHY_PATIENTS = {
     19,
     20,
 }
+LUNGT_PATIENTS = {
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    16,
+    17,
+}
 
 
 def get_timepoint_patient_data(
@@ -47,6 +65,15 @@ def get_timepoint_patient_data(
 
 def get_healthy_patient_data(patient_id, cell_type, metadata):
     group = f"Healthy#{patient_id}"
+    folder_name = metadata.loc[
+        (metadata.group == group, "google_drive_parent_name")
+    ].values[0]
+    target_path = Path(PROCESSED_DATA_PATH, "igra", folder_name)
+    return list(target_path.glob(f"**/*{cell_type}*.npy"))
+
+
+def get_lungt_patient_data(patient_id, cell_type, metadata):
+    group = f"LungT#{patient_id}"
     folder_name = metadata.loc[
         (metadata.group == group, "google_drive_parent_name")
     ].values[0]
@@ -73,18 +100,24 @@ def create_target_dataset(
             get_timepoint_patient_data, timepoint=3, metadata=sepsis_metadata
         ),
         "healthy": partial(get_healthy_patient_data, metadata=igra_metadata),
+        "lungT": partial(get_lungt_patient_data, metadata=igra_metadata),
     }
     patient_dict = {
         "timepoint1": SEPSIS_PATIENTS,
         "timepoint2": SEPSIS_PATIENTS,
         "timepoint3": SEPSIS_PATIENTS,
         "healthy": HEALTHY_PATIENTS,
+        "lungT": LUNGT_PATIENTS,
     }
     target_input_data_path_list = []
     target_test_data_path_list = []
 
     target_func = partial(map_dict[target], cell_type=celltype)
     target_total_patients = patient_dict[target]
+
+    for test_patient in test_patients:
+        assert test_patient in target_total_patients
+
     target_input_patients = target_total_patients - set(test_patients)
 
     for p in target_input_patients:
@@ -92,7 +125,27 @@ def create_target_dataset(
     for p in test_patients:
         target_test_data_path_list.extend(target_func(patient_id=p))
 
+    target_input_data_path_list = exclude_files_in_list(
+        target_input_data_path_list
+    )
+    target_test_data_path_list = exclude_files_in_list(
+        target_test_data_path_list
+    )
+
     return target_input_data_path_list, target_test_data_path_list
+
+
+def load_exclusion_file_list():
+    df = pd.read_csv("data/processed/exclude_images.csv")
+    return df["target"].to_list()
+
+
+def exclude_files_in_list(lst):
+    exclude_list = load_exclusion_file_list()
+    for element in lst:
+        if element.name in exclude_list:
+            lst.remove(element)
+    return lst
 
 
 def create_task_dataset(

@@ -43,6 +43,7 @@ def main():
         .to_list()
     )
 
+    exception_list = ['20220718.164352.377.CD8_2-057_RI Tomogram.npy']
     with open("data/processed/target_files.txt", "w") as f:
         f.write("\n".join(target_list))
 
